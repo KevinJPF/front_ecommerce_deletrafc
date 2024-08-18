@@ -1,0 +1,23 @@
+.container {
+    /* background-color: rebeccapurple; */
+    display: flex;
+    flex-direction: column;
+    padding: 4px 0;
+}
+
+.container p {
+    margin: 0;
+    /* margin-bottom: 4px; */
+    font-size: 1.2rem;
+}
+
+.container input {
+    background-color: white;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 2px solid #042B334f;
+    color: #042B33;
+    font-family: "Kelly Slab", sans-serif;
+    font-size: 1.2rem;
+    box-shadow: 2px 2px 4px 0 #042B334f;
+}
