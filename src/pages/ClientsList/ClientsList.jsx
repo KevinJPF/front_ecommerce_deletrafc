@@ -16,19 +16,29 @@ const ClientsList = () => {
 
   const [content, setContent] = useState([
     {
-      name: "Jorgin",
-      email: "Jorgin@gmail.com",
-      cpf: "999.999.999-99",
+      name: "Raphael Cavalcante Veiga",
+      email: "veiguinha@gmail.com",
+      cpf: "232.323.232-23",
     },
     {
-      name: "Junin",
-      email: "Junin@outlook.com",
+      name: "Eduardo Pereira Rodrigues",
+      email: "dudu_guerreiro@outlook.com",
+      cpf: "777.777.777-77",
+    },
+    {
+      name: "Joaquin Piquerez",
+      email: "joaco_pique@gmail.com",
       cpf: "222.222.222-22",
     },
     {
-      name: "Joaquin",
-      email: "Joaquin@gmail.com",
-      cpf: "777.777.777-77",
+      name: "Ronielson da Silva Barbosa",
+      email: "rustico_rony@yahoo.com.br",
+      cpf: "101.010.101-01",
+    },
+    {
+      name: "Estêvão Willian Almeida",
+      email: "estevao_w@hotmail.com",
+      cpf: "411.411.411-41",
     },
   ]);
 
