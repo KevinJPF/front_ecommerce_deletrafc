@@ -1,0 +1,16 @@
+.main_container {
+    /* background-color: hotpink; */
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    height: 100%;
+    width: 50%;
+    padding: 8px;
+}
+
+.buttons_row {
+    /* background-color: aqua; */
+    display: flex;
+    padding: 16px 0;
+    gap: 16px;
+}

@@ -2,6 +2,7 @@ import styles from "./Button.module.css";
 
 const Button = ({
   darkBtn = false,
+  redBtn = false,
   text,
   onClick,
   buttonColor = null,
@@ -9,7 +10,9 @@ const Button = ({
 }) => {
   return (
     <div
-      className={darkBtn ? styles.btn_dark : styles.btn_back}
+      className={
+        darkBtn ? styles.btn_dark : redBtn ? styles.btn_red : styles.btn_back
+      }
       style={{ backgroundColor: buttonColor, color: textColor }}
       onClick={onClick}
     >

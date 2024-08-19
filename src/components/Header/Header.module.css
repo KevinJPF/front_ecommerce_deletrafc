@@ -21,6 +21,7 @@
   height: 32px;
   border-radius: 200px;
   border: 2px solid var(--white);
+  cursor: pointer;
 }
 
 .menu_button {
