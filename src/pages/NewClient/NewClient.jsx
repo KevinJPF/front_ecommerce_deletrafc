@@ -1,15 +1,19 @@
 import styles from "./NewClient.module.css";
 import InputText from "../../components/InputText/InputText";
 import Button from "../../components/Button/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import PopupModal from "../../components/PopupModal/PopupModal";
 import SwitchButton from "../../components/SwitchButton/SwitchButton";
 import { usePostData } from "../../hooks/usePostData";
+import { useFetchData } from "../../hooks/useFetchData";
+import { usePutData } from "../../hooks/usePutData";
 
 const NewClient = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { putApiData, response: responsePut } = usePutData();
   const { postApiData, loading, error, setError, response } = usePostData();
 
   // Dados Pessoais
@@ -57,6 +61,40 @@ const NewClient = () => {
   const [pagamentoCodSeguranca, setPagamentoCodSeguranca] = useState("");
   const [pagamentoFavorito, setPagamentoFavorito] = useState(false);
   const BANDEIRASPERMITIDAS = ["Visa", "MasterCard", "Elo"];
+
+  if (id) {
+    const { fetchApiData, data } = useFetchData("cliente", { id: id });
+
+    useEffect(() => {
+      if (id) {
+        // console.log("Id passado por parametro: ", id);
+        fetchApiData();
+      }
+    }, [id]);
+
+    useEffect(() => {
+      if (data) {
+        // console.log(data);
+        preencherDadosCliente(data);
+      }
+    }, [data]);
+  }
+
+  // Função para preencher os dados do cliente
+  const preencherDadosCliente = (dados) => {
+    setClienteNome(dados.nomeCliente);
+    setClienteGenero(dados.genero);
+    setClienteTelefone(dados.telefoneNumero);
+    setClienteCpf(dados.cpf);
+    setClienteEmail(dados.email);
+    setClienteNasc(dados.dataNascimento);
+    setClienteSenha(dados.senha);
+    setClienteConfirmarSenha(dados.senha); // Confirmação da senha
+
+    // Atualiza endereços e pagamentos
+    setContentEnderecos(dados.enderecos || []);
+    setContentPagamentos(dados.cartoesCredito || []);
+  };
 
   const [contentEnderecos, setContentEnderecos] = useState([
     // {
@@ -127,6 +165,32 @@ const NewClient = () => {
 
     limparPagamento();
   }, [showPagamentoModal]);
+
+  const removeEnderecoByIndex = (index) => {
+    const userConfirmed = window.confirm(
+      `Tem certeza que deseja remover o endereço "${contentEnderecos[index].nomeEndereco}"?`
+    );
+
+    if (userConfirmed) {
+      setContentEnderecos((prevContent) =>
+        prevContent.filter((endereco) => endereco !== contentEnderecos[index])
+      );
+    }
+  };
+
+  const removePagamentoByIndex = (index) => {
+    const userConfirmed = window.confirm(
+      `Tem certeza que deseja remover a forma de pagamento "${contentPagamentos[index].nomeCartao}"?`
+    );
+
+    if (userConfirmed) {
+      setContentPagamentos((prevContent) =>
+        prevContent.filter(
+          (pagamento) => pagamento !== contentPagamentos[index]
+        )
+      );
+    }
+  };
 
   const validateEmail = (email) => {
     if (email === "") return;
@@ -304,6 +368,7 @@ const NewClient = () => {
     }
 
     const body = {
+      id: id || null,
       genero:
         clienteGenero === "Masculino"
           ? "M"
@@ -349,56 +414,88 @@ const NewClient = () => {
       })),
     };
 
-    postApiData(body, "cliente");
+    if (id) {
+      putApiData("cliente", body);
+    } else {
+      postApiData(body, "cliente");
+    }
   };
 
   useEffect(() => {
-    if (error)
-      // Se todas as validações forem passadas
-      alert(error);
+    if (error) alert(error);
     setError(null);
-
-    // navigate("/clients");
   }, [error]);
+
+  useEffect(() => {
+    if (response) {
+      // Se todas as validações forem passadas
+      alert(response);
+
+      navigate("/clients");
+    } else if (responsePut) {
+      // Se todas as validações forem passadas
+      alert(responsePut);
+
+      navigate("/clients");
+    }
+  }, [response, responsePut]);
 
   const preencherDadosTeste = () => {
     // Dados Pessoais
-    setClienteNome("João da Silva");
+    setClienteNome("Neymar da Silva Santos Junior");
     setClienteGenero("Masculino");
-    setClienteTelefone("(11) 91234-5678"); // Usando formato brasileiro de telefone
-    setClienteCpf("123.123.123-42"); // Exemplo de CPF válido
-    setClienteEmail("joao.silva@example.com");
-    setClienteNasc("01/01/1990"); // Exemplo de data de nascimento válida
-    setClienteSenha("Teste@123"); // Senha com letras maiúsculas, minúsculas, números e caractere especial
-    setClienteConfirmarSenha("Teste@123"); // Senha de confirmação
+    setClienteTelefone("(11) 98765-4321"); // Exemplo fictício de telefone
+    setClienteCpf("123.456.789-10"); // Exemplo fictício de CPF
+    setClienteEmail("ousado_e_alegre@hotmail.com");
+    setClienteNasc("1992-02-05"); // Data de nascimento do Neymar
+    setClienteSenha("Neymar@2024"); // Senha com letras maiúsculas, minúsculas, números e caractere especial
+    setClienteConfirmarSenha("Neymar@2024"); // Senha de confirmação
 
     // Adicionando endereço de teste em contentEnderecos
-    const novoEndereco = {
-      nomeEndereco: "Casa",
-      tipoResidencia: "Apartamento",
-      tipoLogradouro: "Rua",
-      logradouro: "Rua Exemplo",
-      numero: "123",
-      bairro: "Centro",
-      cep: "12345-678",
-      cidade: "São Paulo",
-      estado: "SP",
-      pais: "Brasil",
-      obsEndereco: "Perto da praça",
-      enderecoEntrega: true,
-      enderecoCobranca: true,
-      favorito: true,
-    };
+    const novoEndereco = [
+      {
+        nomeEndereco: "Casa Mangaratiba",
+        tipoResidencia: "Casa",
+        tipoLogradouro: "Avenida",
+        logradouro: "R. da Encosta",
+        numero: "1000",
+        bairro: "Jardim América",
+        cep: "01454-000",
+        cidade: "São Paulo",
+        estado: "SP",
+        pais: "Brasil",
+        obsEndereco: "Próximo ao estádio",
+        enderecoEntrega: true,
+        enderecoCobranca: true,
+        favorito: true,
+      },
+      {
+        nomeEndereco: "Casa Barcelona",
+        tipoResidencia: "Casa",
+        tipoLogradouro: "Avenida",
+        logradouro: "Passeig de Gràcia",
+        numero: "1000",
+        bairro: "Jardim América",
+        cep: "01234-000",
+        cidade: "Barcelona",
+        estado: "SP",
+        pais: "Espanha",
+        obsEndereco: "Próximo ao estádio",
+        enderecoEntrega: true,
+        enderecoCobranca: true,
+        favorito: true,
+      },
+    ];
 
-    setContentEnderecos([novoEndereco]);
+    setContentEnderecos(novoEndereco);
 
     // Adicionando pagamento de teste em contentPagamentos
     const novoPagamento = {
-      nomeCartao: "João da Silva",
-      numeroCartao: "1231-2312-3123-1231",
-      nomeImpresso: "JOAO DA SILVA",
-      bandeiraCartao: "VISA",
-      codigoSeguranca: "123",
+      nomeCartao: "Black PSG",
+      numeroCartao: "1234-5678-9012-3456", // Exemplo fictício de número de cartão
+      nomeImpresso: "NEYMAR JR",
+      bandeiraCartao: "MasterCard",
+      codigoSeguranca: "321",
       favorito: true,
     };
 
@@ -534,7 +631,11 @@ const NewClient = () => {
               </div>
               <div className={styles.cards_container}>
                 {contentEnderecos.map((endereco, index) => (
-                  <div key={index} className={styles.address_card}>
+                  <div
+                    key={index}
+                    className={styles.address_card}
+                    onClick={() => removeEnderecoByIndex(index)}
+                  >
                     <p>{endereco.nomeEndereco}</p>
                     <p>{endereco.logradouro}</p>
                   </div>
@@ -553,7 +654,11 @@ const NewClient = () => {
               </div>
               <div className={styles.cards_container}>
                 {contentPagamentos.map((pagamento, index) => (
-                  <div key={index} className={styles.address_card}>
+                  <div
+                    key={index}
+                    className={styles.address_card}
+                    onClick={() => removePagamentoByIndex(index)}
+                  >
                     <p>{pagamento.nomeCartao}</p>
                     <p>****-****-****-{pagamento.numeroCartao.slice(15, 20)}</p>
                   </div>

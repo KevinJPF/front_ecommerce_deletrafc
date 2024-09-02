@@ -7,16 +7,13 @@ export const usePutData = () => {
 
   const putApiData = async (endpoint, body) => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/livraria/livro${endpoint}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
+      const res = await fetch(`http://localhost:8080/ecommerce/${endpoint}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
       if (!res.ok) {
         const errorMessage = await res.text();
         throw new Error(errorMessage);

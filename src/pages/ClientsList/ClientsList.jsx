@@ -4,10 +4,12 @@ import Button from "../../components/Button/Button";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchData } from "../../hooks/useFetchData";
+import { usePutData } from "../../hooks/usePutData";
 
 const ClientsList = () => {
   const navigate = useNavigate();
   const { fetchApiData, data, loading, error } = useFetchData("clientes");
+  const { putApiData, response } = usePutData();
 
   const [selectedClient, setSelectedClient] = useState(null);
   const [headers, setHeaders] = useState([
@@ -69,16 +71,29 @@ const ClientsList = () => {
     );
   };
 
-  function handleDelete() {
+  function handleDeactivateActivate() {
     const userConfirmed = window.confirm(
-      `Tem certeza que deseja excluir o cliente ${selectedClient.name}?`
+      `Tem certeza que deseja ${
+        selectedClient.clienteAtivo ? "inativar" : "ativar"
+      } o cliente ${selectedClient.nomeCliente}?`
     );
 
     if (userConfirmed) {
-      removeItemByIndex(selectedClient);
-      setSelectedClient(null);
+      const body = {
+        id: selectedClient.id,
+      };
 
-      alert("O cliente foi excluído com sucesso!");
+      putApiData(
+        `cliente/${selectedClient.clienteAtivo ? "inativar" : "ativar"}`,
+        body
+      );
+
+      alert(
+        `O cliente foi ${
+          selectedClient.clienteAtivo ? "inativado" : "ativado"
+        } com sucesso!`
+      );
+      fetchApiData();
     } else {
       // O usuário cancelou a ação
       console.log("Ação cancelada.");
@@ -111,19 +126,22 @@ const ClientsList = () => {
         />
         <Button
           text={"Editar"}
+          darkBtn={!selectedClient}
           onClick={() => {
-            navigate("/new-client");
+            navigate(`/new-client/${selectedClient.id}`);
           }}
         />
-        <Button
-          text={"Excluir"}
-          redBtn={true}
-          onClick={() => {
-            if (selectedClient) {
-              handleDelete();
-            }
-          }}
-        />
+        {selectedClient && (
+          <Button
+            text={selectedClient.clienteAtivo ? "Desativar" : "Ativar"}
+            redBtn={selectedClient.clienteAtivo}
+            onClick={() => {
+              if (selectedClient) {
+                handleDeactivateActivate();
+              }
+            }}
+          />
+        )}
       </div>
     </div>
   );
