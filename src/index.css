@@ -1,5 +1,8 @@
 :root {
+  /* --highlight: #e10046; */
   --highlight: #03FC98;
+  --highlight-80: #03FC98bd;
+  --highlight-20: #03FC9833;
 
   --black: #000000;
   
@@ -15,7 +18,7 @@
   --green2: #006D77;
   --green3: #042B33;
 
-  --red1: #b80505;
+  --red1: #e10046;
 
   line-height: 1.5;
   font-weight: 400;
@@ -39,9 +42,9 @@ body {
 }
 
 .error {
-  color: #042B33;
-  background-color: #ff00041f;
-  border: 1px solid #ff00042f;
+  color: var(--white);
+  background-color: #e100461f;
+  border: 1px solid #e100462f;
   padding: 5px;
   border-radius: 4px;
 }
@@ -52,52 +55,4 @@ body {
   border: 1px solid #00ff372f;
   padding: 5px;
   border-radius: 4px;
-}
-
-.btn {
-    background-color: #1A5561;
-    color: white;
-    font-size: 1.1rem;
-    padding: 4px;
-    width: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: .2s;
-}
-
-.btn.dark {
-    background-color: #042B33;
-}
-
-.btn.danger {
-    background-color: #fe1717;
-}
-
-.btn.medium {
-    background-color: #85BCC7;
-    color: #042B33;
-}
-
-.btn.light {
-    background-color: #E7F6F9;
-    color: #042B33;
-}
-
-.btn:hover {
-    background-color: #1A5561df;
-}
-
-.btn.dark:hover {
-    background-color: #042B33df;
-}
-
-.btn.medium:hover {
-    background-color: #85BCC7df;
-}
-
-.btn.light:hover {
-    background-color: #E7F6F9df;
 }

@@ -3,17 +3,34 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 16px;
     padding: 16px;
 }
 
-.data_container {
+.content_container {
     background-color: var(--gray2);
     border: 1px solid var(--gray5);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 16px;
     padding: 16px;
     border-radius: 4px;
+    width: 94vw;
+    /* height: 76vh; */
     align-self: center;
+}
+
+.data_container {
+    /* background-color: brown; */
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    gap: 8px;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .data_row {
@@ -25,6 +42,47 @@
     gap: 16px;
 }
 
+.cards_container {
+    /* background-color: aqua; */
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.address_card {
+    background-color: var(--gray1);
+    border: 1px solid var(--gray4);
+    border-radius: 8px;
+    padding: 8px 16px;
+    width: 150px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    user-select: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.address_card:hover {
+    color: var(--highlight);
+    border-color: var(--highlight);
+}
+
+.address_card:active {
+    scale: 0.9;
+}
+
+.add_card {
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    /* padding: 8px 0; */
+}
+
 .end_row {
     /* background-color: cornflowerblue; */
     display: flex;
@@ -32,11 +90,9 @@
     /* align-items: start; */
     gap: 8px;
     /* height: 150px; */
-    padding-top: 8px;
 }
 
 .end_row p {
-    margin: 0;
     justify-self: flex-start;
 }
 
@@ -54,5 +110,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-self: flex-end;
+    gap: 8px;
     margin-top: 16px;
+}
+
+@media (max-width: 1024px) {
+    .content_container {
+        flex-direction: column;
+    }
 }

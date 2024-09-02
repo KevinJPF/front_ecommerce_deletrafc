@@ -8,7 +8,7 @@ export const useFetchData = (endpoint, params = {}) => {
   const fetchApiData = async () => {
     try {
       const query = new URLSearchParams(params).toString();
-      const url = `http://localhost:8080/livraria/${endpoint}?${query}`;
+      const url = `http://localhost:8080/ecommerce/${endpoint}?${query}`;
 
       const response = await fetch(url);
       if (!response.ok) {

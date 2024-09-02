@@ -1,16 +1,3 @@
-.background-site {
-  position: absolute;
-  /* background-image: url('/background.jpg'); */
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: var(--gray1);
-  color: var(--white);
-  width: 100vw;
-  height: 100vh;
-  /* filter: blur(6px); */
-}
-
 .app_container {
   margin: 0;
   padding: 0;
@@ -40,7 +27,7 @@
   margin: 0;
 }
 
-h1 {
+p, h1, h2, h3 {
   margin: 0;
   padding: 0;
 }

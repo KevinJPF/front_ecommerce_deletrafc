@@ -1,17 +1,25 @@
 import styles from "./ClientsList.module.css";
 import Table from "../../components/Table/Table";
 import Button from "../../components/Button/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const ClientsList = () => {
   const navigate = useNavigate();
+  const { fetchApiData, data, loading, error } = useFetchData("clientes");
 
   const [selectedClient, setSelectedClient] = useState(null);
   const [headers, setHeaders] = useState([
-    { title: "Nome", type: "text", key: "name", showSearch: true },
+    { title: "Nome", type: "text", key: "nomeCliente", showSearch: true },
     { title: "Email", type: "text", key: "email", showSearch: true },
     { title: "CPF", type: "text", key: "cpf", showSearch: true },
+    {
+      title: "Ativo",
+      type: "checkbox",
+      key: "clienteAtivo",
+      showSearch: false,
+    },
   ]);
 
   const [content, setContent] = useState([
@@ -42,6 +50,15 @@ const ClientsList = () => {
     },
   ]);
 
+  useEffect(() => {
+    try {
+      // console.log(data);
+      setContent(data);
+    } catch (e) {
+      throw new Error("Failed to parse JSON");
+    }
+  }, [data]);
+
   const tableSelectedClient = (selectedItems) => {
     setSelectedClient(selectedItems[0]);
   };
@@ -52,13 +69,39 @@ const ClientsList = () => {
     );
   };
 
+  function handleDelete() {
+    const userConfirmed = window.confirm(
+      `Tem certeza que deseja excluir o cliente ${selectedClient.name}?`
+    );
+
+    if (userConfirmed) {
+      removeItemByIndex(selectedClient);
+      setSelectedClient(null);
+
+      alert("O cliente foi excluído com sucesso!");
+    } else {
+      // O usuário cancelou a ação
+      console.log("Ação cancelada.");
+    }
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <div className={styles.main_container}>
-      <Table
-        headers={headers}
-        data={content}
-        selectedItemLift={tableSelectedClient}
-      />
+      {content && (
+        <Table
+          headers={headers}
+          data={content}
+          selectedItemLift={tableSelectedClient}
+        />
+      )}
       <div className={styles.buttons_row}>
         <Button
           text={"Cadastrar"}
@@ -77,8 +120,7 @@ const ClientsList = () => {
           redBtn={true}
           onClick={() => {
             if (selectedClient) {
-              removeItemByIndex(selectedClient);
-              setSelectedClient(null);
+              handleDelete();
             }
           }}
         />
